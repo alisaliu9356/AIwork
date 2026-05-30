@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚀 AI Prompt 智能寶庫</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Base ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:     #0a0c12;
+  --bg-surface:  #111520;
+  --bg-card:     #161b2e;
+  --bg-card-hov: #1c2340;
+  --border:      rgba(255,255,255,0.07);
+  --border-hov:  rgba(99,179,237,0.35);
+
+  --text-1: #e8eaf6;
+  --text-2: #8892b0;
+  --text-3: #4a5580;
+
+  --cyan:   #63b3ed;
+  --violet: #9f7aea;
+  --pink:   #f687b3;
+  --green:  #68d391;
+  --amber:  #f6ad55;
+  --red:    #fc8181;
+  --teal:   #4fd1c5;
+  --blue:   #76e4f7;
+
+  --grad-btn: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  --grad-hero: linear-gradient(135deg, #1e3a5f 0%, #2d1b69 100%);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-glow: 0 0 30px rgba(99,179,237,0.12);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--bg-base);
+  color: var(--text-1);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Background grid texture ──────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(99,179,237,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99,179,237,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Hero / Header ────────────────────────────── */
+.hero {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 64px 24px 48px;
+}
+.hero-glow {
+  position: absolute;
+  top: -60px; left: 50%;
+  transform: translateX(-50%);
+  width: 600px; height: 300px;
+  background: radial-gradient(ellipse, rgba(99,179,237,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 50px;
+  background: rgba(99,179,237,0.1);
+  border: 1px solid rgba(99,179,237,0.25);
+  color: var(--cyan);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.15;
+  background: linear-gradient(135deg, #e8eaf6 30%, var(--cyan) 70%, var(--violet) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 14px;
+}
+.hero-sub {
+  color: var(--text-2);
+  font-size: 0.95rem;
+  margin-bottom: 28px;
+}
+.hero-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 20px;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  font-size: 0.83rem;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.hero-link:hover {
+  background: rgba(99,179,237,0.1);
+  border-color: rgba(99,179,237,0.3);
+  color: var(--cyan);
+}
+.hero-link svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+/* ── Search ───────────────────────────────────── */
+.search-wrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0 24px 36px;
+}
+.search-inner {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+}
+.search-inner input {
+  width: 100%;
+  padding: 15px 20px 15px 50px;
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border);
+  border-radius: 50px;
+  color: var(--text-1);
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-inner input::placeholder { color: var(--text-3); }
+.search-inner input:focus {
+  border-color: rgba(99,179,237,0.5);
+  box-shadow: 0 0 0 4px rgba(99,179,237,0.08), var(--shadow-glow);
+}
+.search-icon {
+  position: absolute;
+  left: 18px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-3);
+  display: flex;
+}
+.search-icon svg { width: 18px; height: 18px; }
+.search-count {
+  position: absolute;
+  right: 18px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-3);
+  font-size: 0.78rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Filter chips ─────────────────────────────── */
+.filters {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 24px 44px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.chip {
+  padding: 7px 16px;
+  border-radius: 50px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--text-2);
+  font-family: inherit;
+  font-size: 0.83rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+.chip:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: rgba(99,179,237,0.07);
+}
+.chip.active {
+  background: var(--grad-btn);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 2px 16px rgba(59,130,246,0.35);
+}
+
+/* ── Stats bar ────────────────────────────────── */
+.stats-bar {
+  position: relative;
+  z-index: 1;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 28px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.stats-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.stats-count {
+  font-size: 0.78rem;
+  color: var(--text-3);
+  font-family: 'JetBrains Mono', monospace;
+  padding: 4px 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+/* ── Grid ─────────────────────────────────────── */
+.grid-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+/* ── Card ─────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 22px 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.22s, background 0.22s, transform 0.18s, box-shadow 0.22s;
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.4s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(99,179,237,0.04), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.22s;
+  pointer-events: none;
+}
+.card:hover {
+  border-color: var(--border-hov);
+  background: var(--bg-card-hov);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card), var(--shadow-glow);
+}
+.card:hover::after { opacity: 1; }
+
+/* Top accent line */
+.card-accent {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
+  opacity: 0;
+  transition: opacity 0.22s;
+}
+.card:hover .card-accent { opacity: 1; }
+
+/* Tag */
+.card-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  width: fit-content;
+  border: 1px solid;
+}
+
+/* Tag colour variants */
+.tc-content  { color: var(--cyan);   background: rgba(99,179,237,0.1);  border-color: rgba(99,179,237,0.25); }
+.tc-note     { color: var(--violet); background: rgba(159,122,234,0.1); border-color: rgba(159,122,234,0.25); }
+.tc-program  { color: var(--amber);  background: rgba(246,173,85,0.1);  border-color: rgba(246,173,85,0.25); }
+.tc-present  { color: var(--pink);   background: rgba(246,135,179,0.1); border-color: rgba(246,135,179,0.25); }
+.tc-text     { color: var(--green);  background: rgba(104,211,145,0.1); border-color: rgba(104,211,145,0.25); }
+.tc-image    { color: var(--pink);   background: rgba(246,135,179,0.1); border-color: rgba(246,135,179,0.25); }
+.tc-project  { color: var(--blue);   background: rgba(118,228,247,0.1); border-color: rgba(118,228,247,0.25); }
+.tc-mind     { color: var(--teal);   background: rgba(79,209,197,0.1);  border-color: rgba(79,209,197,0.25); }
+.tc-data     { color: var(--amber);  background: rgba(246,173,85,0.1);  border-color: rgba(246,173,85,0.25); }
+.tc-default  { color: var(--text-2); background: rgba(255,255,255,0.05);border-color: var(--border); }
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-1);
+  line-height: 1.3;
+}
+.card-desc {
+  font-size: 0.82rem;
+  color: var(--text-2);
+  line-height: 1.7;
+  flex: 1;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  white-space: pre-line;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.card-btn {
+  margin-top: 6px;
+  width: 100%;
+  padding: 11px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: rgba(255,255,255,0.06);
+  color: var(--text-2);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+.card-btn:hover {
+  background: var(--grad-btn);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(59,130,246,0.3);
+}
+.card-btn.copied {
+  background: rgba(104,211,145,0.15);
+  border-color: rgba(104,211,145,0.35);
+  color: var(--green);
+}
+.card-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* ── State messages ───────────────────────────── */
+.state-msg {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--text-3);
+}
+.state-msg .emoji { font-size: 2.5rem; margin-bottom: 12px; display: block; }
+.state-msg p { font-size: 0.95rem; line-height: 1.6; }
+.state-msg small { font-size: 0.78rem; color: var(--text-3); margin-top: 8px; display: block; }
+
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.loader-ring {
+  width: 36px; height: 36px;
+  border: 3px solid rgba(99,179,237,0.15);
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Footer ───────────────────────────────────── */
+footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 24px;
+  border-top: 1px solid var(--border);
+  color: var(--text-3);
+  font-size: 0.78rem;
+}
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 600px) {
+  .hero { padding: 48px 20px 36px; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .stats-bar { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-badge">
+    <svg viewBox="0 0 16 16" fill="currentColor" style="width:12px;height:12px"><circle cx="8" cy="8" r="4"/></svg>
+    AI Prompt Library
+  </div>
+  <h1>🚀 AI Prompt 智能寶庫</h1>
+  <p class="hero-sub">精選高效提示詞，讓 AI 工作更聰明</p>
+  <a class="hero-link" href="https://docs.google.com/spreadsheets/d/1fDZuDZ7uSIyE30rY-y1tbn4u2C15UoTeFumsefal4mA/edit?gid=1480282197" target="_blank">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    開啟原始資料 Google Sheet
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+  </a>
+</header>
+
+<!-- Search -->
+<div class="search-wrap">
+  <div class="search-inner">
+    <span class="search-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </span>
+    <input type="text" id="searchInput" placeholder="搜尋提示詞、標題、分類…" autocomplete="off">
+    <span class="search-count" id="searchCount"></span>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="filters" id="filtersWrap">
+  <button class="chip active" data-cat="全部">全部</button>
+</div>
+
+<!-- Stats + Grid -->
+<div class="grid-wrap">
+  <div class="stats-bar">
+    <div class="stats-title" id="sectionTitle">🧠 全部提示詞</div>
+    <div class="stats-count" id="statsCount">載入中…</div>
+  </div>
+  <div class="cards-grid" id="cardsGrid">
+    <div class="state-msg">
+      <div class="loader">
+        <div class="loader-ring"></div>
+        <p>正在從 Google Sheet 載入資料…</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>Powered by Google Sheets · Built with ❤️</p>
+</footer>
+
+<script>
+/* ── Config ─────────────────────────────────────────────── */
+const SHEET_ID = '1fDZuDZ7uSIyE30rY-y1tbn4u2C15UoTeFumsefal4mA';
+const GID      = '1480282197';
+
+/* ── Tag colour map ─────────────────────────────────────── */
+const TAG_COLOR = {
+  '內容創作': 'tc-content',
+  '筆記精煉': 'tc-note',
+  '程式應用': 'tc-program',
+  '程式生成': 'tc-program',
+  '簡報表達': 'tc-present',
+  '文本優化': 'tc-text',
+  '生文校正': 'tc-text',
+  '圖片生成': 'tc-image',
+  '專案企劃': 'tc-project',
+  '筆記整理': 'tc-note',
+  '資訊整理': 'tc-data',
+  '心智圖法': 'tc-mind',
+};
+const TAG_ACCENT = {
+  'tc-content': 'linear-gradient(90deg,#63b3ed,#4fd1c5)',
+  'tc-note':    'linear-gradient(90deg,#9f7aea,#f687b3)',
+  'tc-program': 'linear-gradient(90deg,#f6ad55,#fc8181)',
+  'tc-present': 'linear-gradient(90deg,#f687b3,#9f7aea)',
+  'tc-text':    'linear-gradient(90deg,#68d391,#4fd1c5)',
+  'tc-image':   'linear-gradient(90deg,#f687b3,#f6ad55)',
+  'tc-project': 'linear-gradient(90deg,#76e4f7,#63b3ed)',
+  'tc-mind':    'linear-gradient(90deg,#4fd1c5,#68d391)',
+  'tc-data':    'linear-gradient(90deg,#f6ad55,#68d391)',
+  'tc-default': 'linear-gradient(90deg,#8892b0,#4a5580)',
+};
+
+/* ── State ──────────────────────────────────────────────── */
+let allData = [], activeCategory = '全部', searchTerm = '';
+
+/* ── Fetch ──────────────────────────────────────────────── */
+async function fetchSheet() {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const text = await res.text();
+  const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+  if (!match) throw new Error('無法解析 Google Sheet 回應');
+  const json = JSON.parse(match[1]);
+  return parseGviz(json);
+}
+
+function parseGviz(json) {
+  const cols = json.table.cols.map(c => c.label || c.id);
+  return json.table.rows
+    .map(row => {
+      const obj = {};
+      row.c.forEach((cell, i) => {
+        obj[cols[i]] = cell && cell.v !== null ? String(cell.v).trim() : '';
+      });
+      return obj;
+    })
+    .filter(row => Object.values(row).some(v => v));
+}
+
+/* ── Column resolver ────────────────────────────────────── */
+function col(row, ...keys) {
+  for (const k of keys) if (row[k] !== undefined && row[k] !== '') return row[k];
+  return '';
+}
+
+/* ── Helpers ────────────────────────────────────────────── */
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function escA(s) {
+  return s.replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function getCategories(data) {
+  const seen = new Set();
+  const cats = [];
+  data.forEach(row => {
+    const c = col(row,'分類','category','Category','類別','tag','Tag');
+    if (c && !seen.has(c)) { seen.add(c); cats.push(c); }
+  });
+  return cats;
+}
+
+function tagClass(cat) { return TAG_COLOR[cat] || 'tc-default'; }
+function tagAccent(cls) { return TAG_ACCENT[cls] || TAG_ACCENT['tc-default']; }
+
+/* ── Render filters ─────────────────────────────────────── */
+function buildFilters(cats) {
+  const wrap = document.getElementById('filtersWrap');
+  [...wrap.querySelectorAll('[data-cat]:not([data-cat="全部"])')].forEach(b => b.remove());
+  cats.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'chip';
+    btn.dataset.cat = cat;
+    btn.textContent = cat;
+    btn.addEventListener('click', () => setCategory(cat));
+    wrap.appendChild(btn);
+  });
+}
+
+function setCategory(cat) {
+  activeCategory = cat;
+  document.querySelectorAll('.chip').forEach(b =>
+    b.classList.toggle('active', b.dataset.cat === cat)
+  );
+  renderCards();
+}
+
+/* ── Render cards ───────────────────────────────────────── */
+function renderCards() {
+  const grid    = document.getElementById('cardsGrid');
+  const title   = document.getElementById('sectionTitle');
+  const counter = document.getElementById('statsCount');
+
+  let data = allData;
+
+  if (activeCategory !== '全部') {
+    data = data.filter(row =>
+      col(row,'分類','category','Category','類別','tag','Tag') === activeCategory
+    );
+  }
+  if (searchTerm) {
+    const q = searchTerm.toLowerCase();
+    data = data.filter(row => Object.values(row).some(v => v.toLowerCase().includes(q)));
+  }
+
+  title.textContent = activeCategory === '全部' ? '🧠 全部提示詞' : `🧠 ${activeCategory}`;
+  counter.textContent = `${data.length} 筆`;
+  document.getElementById('searchCount').textContent =
+    searchTerm ? `找到 ${data.length} 筆` : '';
+
+  if (!data.length) {
+    grid.innerHTML = `<div class="state-msg"><span class="emoji">🔍</span><p>找不到符合「${esc(searchTerm || activeCategory)}」的提示詞</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = '';
+  data.forEach((row, i) => {
+    const cat   = col(row,'分類','category','Category','類別','tag','Tag');
+    const tit   = col(row,'標題','title','Title','名稱','name','Name');
+    const desc  = col(row,'說明','Prompt','prompt','description','Description','內容','提示詞');
+    const cls   = tagClass(cat);
+    const acc   = tagAccent(cls);
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.animationDelay = Math.min(i * 0.04, 0.6) + 's';
+    card.innerHTML = `
+      <div class="card-accent" style="background:${acc}"></div>
+      <span class="card-tag ${cls}">${esc(cat || '其他')}</span>
+      <div class="card-title">${esc(tit || '（未命名）')}</div>
+      <div class="card-desc">${esc(desc)}</div>
+      <button class="card-btn" data-prompt="${escA(desc)}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        複製 Prompt
+      </button>`;
+    grid.appendChild(card);
+  });
+
+  /* copy logic */
+  grid.querySelectorAll('.card-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const txt = btn.dataset.prompt;
+      try { await navigator.clipboard.writeText(txt); }
+      catch {
+        const ta = Object.assign(document.createElement('textarea'),
+          { value: txt, style: 'position:fixed;opacity:0' });
+        document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+      }
+      const orig = btn.innerHTML;
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px"><polyline points="20 6 9 17 4 12"/></svg> 已複製！`;
+      btn.classList.add('copied');
+      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+    });
+  });
+}
+
+/* ── Init ───────────────────────────────────────────────── */
+document.getElementById('filtersWrap')
+  .querySelector('[data-cat="全部"]')
+  .addEventListener('click', () => setCategory('全部'));
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchTerm = e.target.value.trim();
+  renderCards();
+});
+
+(async () => {
+  try {
+    allData = await fetchSheet();
+    const cats = getCategories(allData);
+    buildFilters(cats);
+    renderCards();
+  } catch (err) {
+    document.getElementById('cardsGrid').innerHTML = `
+      <div class="state-msg">
+        <span class="emoji">⚠️</span>
+        <p>無法載入資料：${esc(err.message)}</p>
+        <small>請確認 Google Sheet 已設為「知道連結的人可以檢視」，<br>或重新整理頁面再試一次。</small>
+      </div>`;
+    console.error(err);
+  }
+})();
+</script>
+</body>
+</html>
