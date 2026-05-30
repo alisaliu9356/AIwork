@@ -7,60 +7,582 @@
 <title>🚀 AI Prompt 智能寶庫</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<style>
+/* ═══ RESET ════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+/* ═══ DESIGN TOKENS ═══════════════════════════════════ */
+:root{
+  --bg:          #eef0f6;
+  --bg-card:     #ffffff;
+  --bg-card-hov: #f6f8ff;
+  --border:      #e2e5ef;
+  --border-hov:  #b8caff;
+
+  --text-1: #111827;
+  --text-2: #4b5568;
+  --text-3: #9ca3af;
+
+  --blue:      #2563eb;
+  --blue-lt:   #eff6ff;
+  --grad-btn:  linear-gradient(135deg,#3b82f6 0%,#6366f1 100%);
+
+  --r-pill: 50px;
+  --r-card: 14px;
+  --r-btn:  8px;
+
+  --sh-card: 0 2px 14px rgba(0,0,0,0.07);
+  --sh-hov:  0 8px 32px rgba(37,99,235,0.14);
+  --sh-btn:  0 4px 14px rgba(37,99,235,0.35);
+
+  --ease: 0.2s ease;
+  --font: 'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;
+}
+
+/* ═══ BASE ═════════════════════════════════════════════ */
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text-1);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+
+/* ═══ HEADER ═══════════════════════════════════════════ */
+.site-header{
+  text-align:center;
+  padding:52px 24px 24px;
+  background:var(--bg);
+}
+.site-title{
+  font-size:clamp(1.75rem,4vw,2.5rem);
+  font-weight:900;
+  letter-spacing:-0.5px;
+  color:var(--text-1);
+  margin-bottom:10px;
+}
+.sheet-link{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  color:var(--blue);
+  font-size:0.88rem;
+  font-weight:500;
+  transition:opacity var(--ease);
+}
+.sheet-link:hover{opacity:.7;text-decoration:underline}
+
+/* ═══ SEARCH ════════════════════════════════════════════ */
+.search-wrap{
+  display:flex;
+  justify-content:center;
+  padding:24px 24px 0;
+}
+.search-box{
+  position:relative;
+  width:100%;
+  max-width:540px;
+}
+.search-box input{
+  width:100%;
+  padding:14px 22px 14px 48px;
+  border:none;
+  border-radius:var(--r-pill);
+  background:#fff;
+  box-shadow:0 2px 18px rgba(0,0,0,0.10);
+  font-family:inherit;
+  font-size:0.95rem;
+  color:var(--text-1);
+  outline:none;
+  transition:box-shadow var(--ease);
+}
+.search-box input::placeholder{color:var(--text-3)}
+.search-box input:focus{box-shadow:0 4px 24px rgba(37,99,235,0.18)}
+.search-icon{
+  position:absolute;
+  left:17px;top:50%;
+  transform:translateY(-50%);
+  font-size:1rem;
+  pointer-events:none;
+}
+
+/* ═══ FILTER BAR ════════════════════════════════════════ */
+.filter-bar{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  padding:22px 24px 36px;
+  max-width:1000px;
+  margin:0 auto;
+}
+.chip{
+  padding:8px 20px;
+  border-radius:var(--r-pill);
+  border:1.5px solid var(--border);
+  background:#fff;
+  color:var(--text-2);
+  font-size:0.875rem;
+  font-weight:500;
+  white-space:nowrap;
+  transition:all var(--ease);
+}
+.chip:hover{
+  border-color:var(--blue);
+  color:var(--blue);
+  background:var(--blue-lt);
+}
+.chip.active{
+  background:var(--blue);
+  border-color:var(--blue);
+  color:#fff;
+  font-weight:700;
+  box-shadow:0 2px 12px rgba(37,99,235,0.30);
+}
+
+/* ═══ MAIN ══════════════════════════════════════════════ */
+.main{
+  max-width:1240px;
+  margin:0 auto;
+  padding:0 24px 80px;
+}
+
+/* ═══ SECTION HEADING ═══════════════════════════════════ */
+.section-head{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:1.2rem;
+  font-weight:800;
+  margin-bottom:22px;
+  color:var(--text-1);
+}
+.section-count{
+  font-size:0.76rem;
+  font-weight:600;
+  color:var(--text-3);
+  background:#fff;
+  border:1.5px solid var(--border);
+  border-radius:6px;
+  padding:2px 9px;
+  margin-left:4px;
+}
+
+/* ═══ GRID ══════════════════════════════════════════════ */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+  gap:20px;
+}
+
+/* ═══ CARD ══════════════════════════════════════════════ */
+.card{
+  background:var(--bg-card);
+  border:1.5px solid var(--border);
+  border-radius:var(--r-card);
+  padding:20px 18px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  box-shadow:var(--sh-card);
+  position:relative;
+  overflow:hidden;
+  transition:transform var(--ease),box-shadow var(--ease),
+             border-color var(--ease),background var(--ease);
+  animation:fadeUp .35s ease both;
+}
+.card::before{           /* left accent bar */
+  content:'';
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:3px;
+  background:var(--c-accent,var(--blue));
+  opacity:0;
+  transition:opacity var(--ease);
+}
+.card::after{            /* top accent bar (like screenshot) */
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background:var(--c-accent,var(--blue));
+  border-radius:0 0 3px 3px;
+  opacity:0;
+  transition:opacity var(--ease);
+}
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--sh-hov);
+  border-color:var(--border-hov);
+  background:var(--bg-card-hov);
+}
+.card:hover::after{opacity:1}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(16px)}
+  to  {opacity:1;transform:translateY(0)}
+}
+
+/* ═══ TAG ═══════════════════════════════════════════════ */
+.tag{
+  display:inline-flex;
+  align-items:center;
+  padding:3px 11px;
+  border-radius:var(--r-pill);
+  font-size:0.72rem;
+  font-weight:700;
+  letter-spacing:.03em;
+  width:fit-content;
+  border:1px solid;
+}
+/* tag colours */
+.t-content  {color:#1d4ed8;background:#dbeafe;border-color:#bfdbfe}
+.t-note     {color:#6d28d9;background:#ede9fe;border-color:#ddd6fe}
+.t-program  {color:#92400e;background:#fef3c7;border-color:#fde68a}
+.t-present  {color:#9d174d;background:#fce7f3;border-color:#fbcfe8}
+.t-text     {color:#065f46;background:#d1fae5;border-color:#a7f3d0}
+.t-proofread{color:#064e3b;background:#ecfdf5;border-color:#a7f3d0}
+.t-image    {color:#9d174d;background:#fdf2f8;border-color:#fbcfe8}
+.t-project  {color:#1e40af;background:#e0e7ff;border-color:#c7d2fe}
+.t-organize {color:#3730a3;background:#ede9fe;border-color:#ddd6fe}
+.t-data     {color:#075985;background:#e0f2fe;border-color:#bae6fd}
+.t-mind     {color:#065f46;background:#d1fae5;border-color:#a7f3d0}
+.t-default  {color:#374151;background:#f3f4f6;border-color:#e5e7eb}
+
+/* ═══ CARD BODY ═════════════════════════════════════════ */
+.card-title{
+  font-size:1.1rem;
+  font-weight:800;
+  color:var(--text-1);
+  line-height:1.3;
+}
+.card-desc{
+  font-size:0.82rem;
+  color:var(--text-2);
+  line-height:1.72;
+  flex:1;
+  overflow:hidden;
+  display:-webkit-box;
+  -webkit-line-clamp:6;
+  -webkit-box-orient:vertical;
+  white-space:pre-line;
+}
+
+/* ═══ COPY BUTTON ═══════════════════════════════════════ */
+.copy-btn{
+  margin-top:6px;
+  width:100%;
+  padding:11px 16px;
+  border-radius:var(--r-btn);
+  border:none;
+  background:var(--grad-btn);
+  color:#fff;
+  font-size:0.88rem;
+  font-weight:700;
+  letter-spacing:.02em;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  box-shadow:0 2px 10px rgba(37,99,235,0.20);
+  transition:opacity var(--ease),transform var(--ease),
+             background var(--ease),box-shadow var(--ease);
+}
+.copy-btn:hover{
+  opacity:.91;
+  transform:scale(.99);
+  box-shadow:var(--sh-btn);
+}
+.copy-btn:active{transform:scale(.97)}
+.copy-btn.copied{
+  background:linear-gradient(135deg,#059669,#10b981);
+  box-shadow:0 2px 10px rgba(5,150,105,0.25);
+}
+
+/* ═══ STATES ════════════════════════════════════════════ */
+.state{
+  grid-column:1/-1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding:80px 24px;
+  color:var(--text-3);
+  font-size:.95rem;
+  text-align:center;
+}
+.state .ico{font-size:2.4rem}
+.state.err{color:#dc2626}
+.state.err small{color:var(--text-3);font-size:.8rem;margin-top:4px;display:block}
+.spinner{
+  width:32px;height:32px;
+  border:3px solid #e2e5ef;
+  border-top-color:var(--blue);
+  border-radius:50%;
+  animation:spin .75s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ═══ TOAST ═════════════════════════════════════════════ */
+.toast{
+  position:fixed;
+  bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:#1f2937;color:#fff;
+  padding:11px 22px;
+  border-radius:var(--r-pill);
+  font-size:.87rem;font-weight:600;
+  box-shadow:0 8px 24px rgba(0,0,0,0.22);
+  opacity:0;
+  transition:transform .3s ease,opacity .3s ease;
+  z-index:999;
+  pointer-events:none;
+}
+.toast.show{
+  transform:translateX(-50%) translateY(0);
+  opacity:1;
+}
+
+/* ═══ FOOTER ════════════════════════════════════════════ */
+.site-footer{
+  text-align:center;
+  padding:22px 24px;
+  border-top:1px solid var(--border);
+  color:var(--text-3);
+  font-size:.78rem;
+}
+.site-footer a{color:var(--blue)}
+.site-footer a:hover{text-decoration:underline}
+
+/* ═══ RESPONSIVE ════════════════════════════════════════ */
+@media(max-width:640px){
+  .site-header{padding:36px 20px 20px}
+  .grid{grid-template-columns:1fr;gap:14px}
+  .filter-bar{gap:8px}
+}
+@media(min-width:1400px){
+  .grid{grid-template-columns:repeat(5,1fr)}
+}
+</style>
 </head>
 <body>
 
-<!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+<!-- HEADER -->
 <header class="site-header">
-  <div class="header-inner">
-    <h1 class="site-title">🚀 AI Prompt 智能寶庫</h1>
-    <a class="sheet-link"
-       href="https://docs.google.com/spreadsheets/d/1fDZuDZ7uSIyE30rY-y1tbn4u2C15UoTeFumsefal4mA/edit?gid=1480282197"
-       target="_blank" rel="noopener">
-      📋 開啟原始資料 Google Sheet
-    </a>
-  </div>
+  <h1 class="site-title">🚀 AI Prompt 智能寶庫</h1>
+  <a class="sheet-link"
+     href="https://docs.google.com/spreadsheets/d/1fDZuDZ7uSIyE30rY-y1tbn4u2C15UoTeFumsefal4mA/edit?gid=1480282197"
+     target="_blank" rel="noopener">
+    📋 開啟原始資料 Google Sheet
+  </a>
 </header>
 
-<!-- ═══ SEARCH ════════════════════════════════════════════════ -->
-<section class="search-section">
+<!-- SEARCH -->
+<div class="search-wrap">
   <div class="search-box">
     <span class="search-icon">🔍</span>
     <input id="searchInput" type="text" placeholder="搜尋提示詞..." autocomplete="off">
   </div>
-</section>
+</div>
 
-<!-- ═══ FILTER CHIPS ══════════════════════════════════════════ -->
-<nav class="filter-bar" id="filterBar" aria-label="分類篩選">
+<!-- FILTER CHIPS -->
+<nav class="filter-bar" id="filterBar">
   <button class="chip active" data-cat="全部">全部</button>
 </nav>
 
-<!-- ═══ MAIN CONTENT ══════════════════════════════════════════ -->
-<main class="main-content">
-  <div class="section-heading" id="sectionHeading">
-    <span class="heading-icon">🧠</span>
-    <span class="heading-text">AI 協思</span>
-    <span class="heading-count" id="headingCount"></span>
+<!-- MAIN -->
+<main class="main">
+  <div class="section-head">
+    <span>🧠</span>
+    <span id="headingText">AI 協思</span>
+    <span class="section-count" id="headingCount"></span>
   </div>
-
-  <div class="cards-grid" id="cardsGrid">
-    <!-- Loading state -->
-    <div class="state-loading" id="loadingState">
+  <div class="grid" id="grid">
+    <div class="state">
       <div class="spinner"></div>
       <p>正在載入資料…</p>
     </div>
   </div>
 </main>
 
-<!-- ═══ FOOTER ════════════════════════════════════════════════ -->
+<!-- FOOTER -->
 <footer class="site-footer">
-  <p>Powered by <a href="https://docs.google.com/spreadsheets" target="_blank">Google Sheets</a> · Built with ❤️</p>
+  Powered by <a href="https://docs.google.com/spreadsheets" target="_blank">Google Sheets</a> · Built with ❤️
 </footer>
 
-<!-- ═══ COPY TOAST ════════════════════════════════════════════ -->
+<!-- TOAST -->
 <div class="toast" id="toast">✅ 已複製到剪貼簿！</div>
 
-<script src="app.js"></script>
+<script>
+/* ── 設定 ────────────────────────────────────────────── */
+const SHEET_ID = '1fDZuDZ7uSIyE30rY-y1tbn4u2C15UoTeFumsefal4mA';
+const GID      = '1480282197';
+
+/* ── 標籤對照 ────────────────────────────────────────── */
+const TAG_CLS = {
+  '內容創作':'t-content','筆記精煉':'t-note',
+  '程式應用':'t-program','程式生成':'t-program',
+  '簡報表達':'t-present','文本優化':'t-text',
+  '生文校正':'t-proofread','圖片生成':'t-image',
+  '專案企劃':'t-project','筆記整理':'t-organize',
+  '資訊整理':'t-data','心智圖法':'t-mind',
+};
+const ACCENT = {
+  't-content':'#2563eb','t-note':'#7c3aed',
+  't-program':'#d97706','t-present':'#db2777',
+  't-text':'#059669','t-proofread':'#059669',
+  't-image':'#db2777','t-project':'#1d4ed8',
+  't-organize':'#6d28d9','t-data':'#0891b2',
+  't-mind':'#065f46','t-default':'#6b7280',
+};
+
+/* ── 欄位候選名稱 ──────────────────────────────────── */
+const COL_CAT  = ['分類','category','Category','類別','tag','Tag'];
+const COL_TITLE= ['標題','title','Title','名稱','name','Name'];
+const COL_DESC = ['說明','Prompt','prompt','description','Description','內容','提示詞','文字'];
+
+/* ── 狀態 ────────────────────────────────────────────── */
+let allData=[], activeCat='全部', searchQ='';
+
+/* ── DOM ─────────────────────────────────────────────── */
+const $grid   = document.getElementById('grid');
+const $bar    = document.getElementById('filterBar');
+const $hText  = document.getElementById('headingText');
+const $hCount = document.getElementById('headingCount');
+const $search = document.getElementById('searchInput');
+const $toast  = document.getElementById('toast');
+
+/* ── Fetch ───────────────────────────────────────────── */
+async function fetchData(){
+  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}&t=${Date.now()}`;
+  const r=await fetch(url);
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  const txt=await r.text();
+  const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);?\s*$/);
+  if(!m) throw new Error('格式解析失敗');
+  return parseGviz(JSON.parse(m[1]));
+}
+function parseGviz(j){
+  const cols=j.table.cols.map(c=>(c.label||c.id||'').trim());
+  return j.table.rows.map(row=>{
+    const o={};
+    row.c.forEach((c,i)=>{
+      if(cols[i]) o[cols[i]]=(c&&c.v!=null)?String(c.v).trim():'';
+    });
+    return o;
+  }).filter(r=>Object.values(r).some(v=>v));
+}
+
+/* ── Column helper ───────────────────────────────────── */
+function col(row,cands){
+  for(const k of cands) if(row[k]!==undefined&&row[k]!=='') return row[k];
+  return '';
+}
+
+/* ── Escape ──────────────────────────────────────────── */
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function escA(s){return s.replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+
+/* ── Categories ──────────────────────────────────────── */
+function getCats(data){
+  const seen=new Set(),list=[];
+  data.forEach(r=>{const c=col(r,COL_CAT);if(c&&!seen.has(c)){seen.add(c);list.push(c);}});
+  return list;
+}
+
+/* ── Build filter chips ──────────────────────────────── */
+function buildChips(cats){
+  [...$bar.querySelectorAll('[data-cat]:not([data-cat="全部"])')].forEach(b=>b.remove());
+  cats.forEach(cat=>{
+    const b=document.createElement('button');
+    b.className='chip';b.dataset.cat=cat;b.textContent=cat;
+    b.addEventListener('click',()=>setCat(cat));
+    $bar.appendChild(b);
+  });
+}
+function setCat(cat){
+  activeCat=cat;
+  document.querySelectorAll('.chip').forEach(b=>b.classList.toggle('active',b.dataset.cat===cat));
+  render();
+}
+
+/* ── Render ──────────────────────────────────────────── */
+function render(){
+  let data=allData;
+  if(activeCat!=='全部') data=data.filter(r=>col(r,COL_CAT)===activeCat);
+  if(searchQ){
+    const q=searchQ.toLowerCase();
+    data=data.filter(r=>Object.values(r).some(v=>v.toLowerCase().includes(q)));
+  }
+
+  $hText.textContent = activeCat==='全部' ? 'AI 協思' : activeCat;
+  $hCount.textContent = data.length+' 筆';
+
+  if(!data.length){
+    $grid.innerHTML=`<div class="state"><span class="ico">🔍</span><p>找不到「<strong>${esc(searchQ||activeCat)}</strong>」相關提示詞</p></div>`;
+    return;
+  }
+
+  $grid.innerHTML='';
+  data.forEach((row,i)=>{
+    const cat  = col(row,COL_CAT);
+    const title= col(row,COL_TITLE);
+    const desc = col(row,COL_DESC);
+    const cls  = TAG_CLS[cat]||'t-default';
+    const acc  = ACCENT[cls]||ACCENT['t-default'];
+
+    const card=document.createElement('div');
+    card.className='card';
+    card.style.cssText=`--c-accent:${acc};animation-delay:${Math.min(i*.04,.6)}s`;
+    card.innerHTML=`
+      <span class="tag ${cls}">${esc(cat||'其他')}</span>
+      <div class="card-title">${esc(title||'（未命名）')}</div>
+      <div class="card-desc">${esc(desc)}</div>
+      <button class="copy-btn" data-p="${escA(desc)}">📋 複製 Prompt</button>`;
+    $grid.appendChild(card);
+  });
+
+  $grid.querySelectorAll('.copy-btn').forEach(btn=>btn.addEventListener('click',doCopy));
+}
+
+/* ── Copy ────────────────────────────────────────────── */
+let toastT;
+async function doCopy(e){
+  const btn=e.currentTarget, txt=btn.dataset.p;
+  try{ await navigator.clipboard.writeText(txt); }
+  catch{
+    const ta=document.createElement('textarea');
+    Object.assign(ta.style,{position:'fixed',opacity:'0',top:'0',left:'0'});
+    ta.value=txt; document.body.appendChild(ta); ta.focus(); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+  }
+  const orig=btn.innerHTML;
+  btn.innerHTML='✅ 已複製！'; btn.classList.add('copied'); btn.disabled=true;
+  setTimeout(()=>{btn.innerHTML=orig;btn.classList.remove('copied');btn.disabled=false;},2000);
+
+  $toast.classList.add('show');
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>$toast.classList.remove('show'),2200);
+}
+
+/* ── Init ────────────────────────────────────────────── */
+$bar.querySelector('[data-cat="全部"]').addEventListener('click',()=>setCat('全部'));
+$search.addEventListener('input',e=>{searchQ=e.target.value.trim();render();});
+
+(async()=>{
+  try{
+    allData=await fetchData();
+    buildChips(getCats(allData));
+    render();
+  }catch(err){
+    $grid.innerHTML=`<div class="state err"><span class="ico">⚠️</span><p>無法載入：${esc(err.message)}</p><small>請確認 Google Sheet 已設為「知道連結的人可以<strong>檢視</strong>」後重新整理</small></div>`;
+    console.error(err);
+  }
+})();
+</script>
 </body>
 </html>
