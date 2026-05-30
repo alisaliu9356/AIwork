@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AI Prompt 智能寶庫 — 精選高效提示詞，讓 AI 工作更聰明">
+<title>🚀 AI Prompt 智能寶庫</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="header-inner">
+    <h1 class="site-title">🚀 AI Prompt 智能寶庫</h1>
+    <a class="sheet-link"
+       href="https://docs.google.com/spreadsheets/d/1fDZuDZ7uSIyE30rY-y1tbn4u2C15UoTeFumsefal4mA/edit?gid=1480282197"
+       target="_blank" rel="noopener">
+      📋 開啟原始資料 Google Sheet
+    </a>
+  </div>
+</header>
+
+<!-- ═══ SEARCH ════════════════════════════════════════════════ -->
+<section class="search-section">
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input id="searchInput" type="text" placeholder="搜尋提示詞..." autocomplete="off">
+  </div>
+</section>
+
+<!-- ═══ FILTER CHIPS ══════════════════════════════════════════ -->
+<nav class="filter-bar" id="filterBar" aria-label="分類篩選">
+  <button class="chip active" data-cat="全部">全部</button>
+</nav>
+
+<!-- ═══ MAIN CONTENT ══════════════════════════════════════════ -->
+<main class="main-content">
+  <div class="section-heading" id="sectionHeading">
+    <span class="heading-icon">🧠</span>
+    <span class="heading-text">AI 協思</span>
+    <span class="heading-count" id="headingCount"></span>
+  </div>
+
+  <div class="cards-grid" id="cardsGrid">
+    <!-- Loading state -->
+    <div class="state-loading" id="loadingState">
+      <div class="spinner"></div>
+      <p>正在載入資料…</p>
+    </div>
+  </div>
+</main>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <p>Powered by <a href="https://docs.google.com/spreadsheets" target="_blank">Google Sheets</a> · Built with ❤️</p>
+</footer>
+
+<!-- ═══ COPY TOAST ════════════════════════════════════════════ -->
+<div class="toast" id="toast">✅ 已複製到剪貼簿！</div>
+
+<script src="app.js"></script>
+</body>
+</html>
